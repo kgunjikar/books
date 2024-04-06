@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Management</title>
+</head>
+<body>
+<h1>Book Management</h1>
+
+<section>
+    <h2>Add a Book</h2>
+    <form id="addBookForm">
+        <input type="text" id="addName" placeholder="Book Name" required>
+        <input type="text" id="addAuthor" placeholder="Author" required>
+        <input type="date" id="addPublishDate" placeholder="Publication Date" required>
+        <textarea id="addDescription" placeholder="Description" required></textarea>
+        <button type="button" onclick="addBook()">Add Book</button>
+    </form>
+</section>
+
+<section>
+    <h2>Remove a Book</h2>
+    <form id="removeBookForm">
+        <input type="number" id="removeId" placeholder="Book ID" required>
+        <button type="button" onclick="removeBook()">Remove Book</button>
+    </form>
+</section>
+
+<section>
+    <h2>Update a Book</h2>
+    <form id="updateBookForm">
+        <input type="number" id="updateId" placeholder="Book ID" required>
+        <input type="text" id="updateName" placeholder="New Book Name">
+        <input type="text" id="updateAuthor" placeholder="New Author Name">
+        <input type="date" id="updatePublishDate" placeholder="New Publication Date">
+        <textarea id="updateDescription" placeholder="New Description"></textarea>
+        <button type="button" onclick="updateBook()">Update Book</button>
+    </form>
+</section>
+
+<section>
+    <h2>Search for a Book</h2>
+    <form id="searchBookForm">
+        <input type="text" id="searchName" placeholder="Book Name">
+        <button type="button" onclick="searchBook()">Search</button>
+    </form>
+    <div id="searchResults"></div>
+</section>
+
+<script>
+    function addBook() {
+        const formData = {
+            name: document.getElementById('addName').value,
+            author: document.getElementById('addAuthor').value,
+            publishDate: document.getElementById('addPublishDate').value,
+            description: document.getElementById('addDescription').value,
+        };
+
+        fetch('http://localhost:8080/api/add-book', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData),
+        })
+            .then(response => response.json())
+            .then(data => alert('Book added successfully'))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function removeBook() {
+        const bookId = document.getElementById('removeId').value;
+
+        fetch('http://localhost:8080/api/remove-book', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ id: bookId }),
+        })
+            .then(response => response.json())
+            .then(data => alert('Book removed successfully'))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function updateBook() {
+        const formData = {
+            id: document.getElementById('updateId').value,
+            name: document.getElementById('updateName').value,
+            author: document.getElementById('updateAuthor').value,
+            publishDate: document.getElementById('updatePublishDate').value,
+            description: document.getElementById('updateDescription').value,
+        };
+
+        fetch('http://localhost:8080/api/update-book', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData),
+        })
+            .then(response => response.json())
+            .then(data => alert('Book updated successfully'))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function searchBook() {
+        const bookName = document.getElementById('searchName').value;
+
+        fetch('http://localhost:8080/api/search', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ name: bookName }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const resultsContainer = document.getElementById('searchResults');
+                resultsContainer.innerHTML = ''; // Clear previous results
+                if (data && data.length) {
+                    const list = document.createElement('ul');
+                    data.forEach(book => {
+                        const item = document.createElement('li');
+                        item.textContent = `ID: ${book.id}, Name: ${book.name}, Author: ${book.author}`;
+                        list.appendChild(item);
+                    });
+                    resultsContainer.appendChild(list);
+                } else {
+                    resultsContainer.textContent = 'No books found.';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>
