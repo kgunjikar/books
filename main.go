@@ -25,8 +25,11 @@ func corsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+
 func main() {
 	mux := http.NewServeMux()
+	mux.HandleFunc("/", server.HomeHandler)
+	mux.HandleFunc("/api/login", server.LoginHandler)
 	mux.HandleFunc("/api/add-book", server.AddBookHandler)
 	mux.HandleFunc("/api/remove-book", server.RemoveBookHandler)
 	mux.HandleFunc("/api/update-book", server.UpdateBookHandler)

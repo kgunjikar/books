@@ -43,19 +43,40 @@
       <label for="password">Password</label>
       <input type="password" id="password" name="password" required>
 
-      <button type="submit">Login</button>
+      <button type="button" onclick="login()">Login</button>
     </form>
   </div>
 
   <script>
-    document.getElementById("loginForm").addEventListener("submit", function(event){
-      event.preventDefault();
+    function login() {
       var username = document.getElementById("username").value;
       var password = document.getElementById("password").value;
       
-      // Perform your authentication here, for demo purpose let's just alert the entered credentials
-      alert("Username: " + username + "\nPassword: " + password);
-    });
+      var data = {
+        UserName: username,
+        PassWord: password
+      };
+
+      fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          // Handle successful login
+          alert("Login successful!");
+        } else {
+          // Handle failed login
+          alert("Login failed!");
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
   </script>
 </body>
 </html>

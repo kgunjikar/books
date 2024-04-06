@@ -53,6 +53,37 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Book added successfully"})
 }
 
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+    // Write the HTML content to the response writer
+	if r.Method != http.MethodPost {
+        http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+        return
+    }
+
+    var creds schema.Credentials
+    err := json.NewDecoder(r.Body).Decode(&creds)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    // Check if the username and password are "root"
+    if creds.UserName == "root" && creds.PassWord == "root" {
+        // Respond with a success message and load the allinone.html page
+	log.Printf("Logged in successfully")
+	// w.Header().Set("Content-Type", "text/html")
+        http.ServeFile(w, r, "html/allinone.html")
+        return
+    }
+
+    // Respond with an error message for incorrect credentials
+    http.Error(w, "Incorrect username or password", http.StatusUnauthorized)
+}
+
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+        http.ServeFile(w, r, "html/login.html")
+}
+
 func RemoveBookHandler(w http.ResponseWriter, r *http.Request) {
 	var request struct {
 		BookId int `json:"bookId"`

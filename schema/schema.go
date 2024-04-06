@@ -15,3 +15,8 @@ type Book struct {
 type SearchRequest struct {
 	BookName string `json:"name"`
 }
+
+type Credentials struct {
+	UserName string `json:"userName"`
+	PassWord string `json:"passWord`
+}
