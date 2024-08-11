@@ -72,7 +72,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
         // Respond with a success message and load the allinone.html page
 	log.Printf("Logged in successfully")
 	// w.Header().Set("Content-Type", "text/html")
-        http.ServeFile(w, r, "html/allinone.html")
+	// http.Redirect(w, r, "/home", 302)
+        // mux.Handle("/", http.RedirectHandler("https://freshman.tech", http.StatusSeeOther))
+
         return
     }
 
@@ -82,6 +84,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
         http.ServeFile(w, r, "html/login.html")
+}
+
+func HomePageHandler(w http.ResponseWriter, r *http.Request) {
+        http.ServeFile(w, r, "html/allinone.html")
 }
 
 func RemoveBookHandler(w http.ResponseWriter, r *http.Request) {

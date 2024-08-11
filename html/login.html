@@ -67,7 +67,8 @@
       .then(response => {
         if (response.ok) {
           // Handle successful login
-          alert("Login successful!");
+          // alert("Login successful!");
+          window.location.href = "http://localhost:8080/home"
         } else {
           // Handle failed login
           alert("Login failed!");
